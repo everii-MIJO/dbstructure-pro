@@ -1,0 +1,784 @@
+Table in_language {
+  id integer [pk, increment]
+  name varchar
+  iso varchar
+  sort integer
+  locale varchar
+  ui tinyint
+  finance tinyint
+  data tinyint
+  doc tinyint
+  newsletter tinyint
+}
+
+Table in_location {
+  id integer [pk, increment]
+  name varchar
+  description text
+  country integer
+  language integer
+  numberformat integer
+  sort integer
+}
+
+Table in_lock {
+  id bigint [pk, increment]
+  class varchar
+  object_id integer
+  user_id integer
+  lockstamp datetime
+  expires datetime
+}
+
+Table in_mailer_configuration {
+  id integer [pk, increment]
+  smtp tinyint
+  type tinyint
+  server varchar
+  port integer
+  security varchar
+  need_auth tinyint
+  username varchar
+  password varchar
+  restrict_sender tinyint
+  sender_address varchar
+  sender_name varchar
+  default_config tinyint
+  invalid_cert_allowed tinyint
+  use_oauth tinyint
+  oauth_username varchar
+  ms_tenant_id varchar
+  client_id varchar
+  client_secret varchar
+  refresh_token varchar
+}
+
+Table in_menu_usage {
+  id integer [pk, increment]
+  timestamp timestamp
+  module varchar
+  page varchar
+  user_id integer
+}
+
+Table in_module_page_usage {
+  module varchar
+  page varchar
+  total_usage integer
+  year integer
+  month integer
+}
+
+Table in_numberpattern {
+  id integer [pk, increment]
+  class varchar
+  doctype integer
+  pattern varchar
+  serial varchar
+  tenant integer
+  custom varchar
+}
+
+Table in_permission {
+  action varchar
+  control varchar
+  rolle integer
+  perm tinyint
+}
+
+Table in_permission_datalogged {
+  id integer [pk, increment]
+  user integer
+  time timestamp
+  code varchar
+  module varchar
+  label varchar
+  role integer
+  roleName varchar
+  action varchar
+  control varchar
+  pending_text varchar
+}
+
+Table in_permission_pending {
+  action varchar
+  control varchar
+  rolle integer
+  perm tinyint
+  modified_by integer
+  modified_at timestamp
+  module varchar
+  to_be_deleted integer
+}
+
+Table in_persistence {
+  id integer [pk, increment]
+  persisted_data text
+  uuid varchar
+}
+
+Table in_rate {
+  id integer [pk, increment]
+  base_id integer
+  agency integer
+  client_id integer
+  area_id integer
+  task_id integer
+  active tinyint
+  text text
+  information text
+  cost decimal
+  currency_cost char
+  currency char
+  finprint_pdf tinyint
+}
+
+Table in_rate_activity {
+  rate integer
+  activity integer
+}
+
+Table in_rate_amount {
+  id integer [pk, increment]
+  rate_id integer
+  staff_level_id integer
+  amount decimal
+}
+
+Table in_rate_base {
+  id integer [pk, increment]
+  parent_id integer
+  name varchar
+  text text
+  unit_id integer
+  activity_input tinyint
+  tenant integer
+  deleted tinyint
+  sort integer
+}
+
+Table in_rate_cost {
+  rate integer
+  cost integer
+}
+
+Table in_release_notes {
+  id integer [pk, increment]
+  language varchar
+  tbx_release varchar
+  app_release varchar
+  header varchar
+  text mediumtext
+  image_file blob
+  link_url varchar
+  link_text varchar
+  priority varchar
+  minor_tbxrelease integer
+  minor_app_release integer
+  first_note tinyint
+  product varchar
+}
+
+Table in_rolle {
+  id integer [pk, increment]
+  name varchar
+  beschreibung varchar
+  sort integer
+}
+
+Table in_setting {
+  agency tinyint
+  client_id integer
+  area_id integer
+  task_id integer
+  name varchar
+  value varchar
+}
+
+Table in_staff_hierarchy {
+  id integer [pk, increment]
+  employee_id integer
+  supervisor_id integer
+  direct integer
+  level integer
+}
+
+Table in_stafflevel {
+  id integer [pk, increment]
+  name varchar
+  cost decimal
+  sort integer
+  reference_rate integer
+  tenant integer
+}
+
+Table in_synclog {
+  id integer [pk, increment]
+  name varchar
+  data_id integer
+  data_class varchar
+  adapter_id integer
+  time timestamp
+  user integer
+  success tinyint
+  error_type integer
+  remote varchar
+  error text
+}
+
+Table in_systemlog {
+  id integer [pk, increment]
+  time timestamp
+  version varchar
+  success tinyint
+  lastfile varchar
+  customfile varchar
+}
+
+Table in_team {
+  id integer [pk, increment]
+  name varchar
+  comment varchar
+  leader integer
+  tenant integer
+  sort integer
+}
+
+Table in_team_members {
+  id integer [pk, increment]
+  team_id integer
+  user_id integer
+}
+
+Table in_tenant {
+  id integer [pk, increment]
+  name varchar
+  code varchar
+  description varchar
+  sort integer
+  company integer
+  country integer
+  active tinyint
+  number_start integer
+  number_end integer
+  location_id integer
+  currency char
+  finance_address_id integer
+  standardmail varchar
+  max_timekeeping_hours_per_day varchar
+  average_cost decimal
+  internal_billing_type integer
+}
+
+Table in_textblock {
+  id integer [pk, increment]
+  type integer
+  title varchar
+  text text
+  module varchar
+  language varchar
+  tenant integer
+  default_estimate tinyint
+  default_invoice tinyint
+}
+
+Table in_translate {
+  id integer [pk, increment]
+  class varchar
+  dataid integer
+  field varchar
+  language char
+  text text
+}
+
+Table in_unique {
+  id varchar [pk]
+  year year
+  value integer
+  tenant integer
+  month integer
+}
+
+Table in_userrolle {
+  rolle integer
+  user integer
+}
+
+Table in_userrolle_pending {
+  rolle integer
+  user integer
+  modified_by integer
+  modified_at timestamp
+  to_be_deleted integer
+}
+
+Table in_usersession {
+  id integer [pk, increment]
+  user_id integer
+  session_key text
+  remote_ip varchar
+  lastseen timestamp
+  user_agent text
+  revalidate integer
+}
+
+Table in_usersetting {
+  user integer
+  name varchar
+  value text
+}
+
+Table in_validity_periods {
+  id integer [pk, increment]
+  data_class varchar
+  data_id integer
+  field varchar
+  valid_from date
+  valid_until date
+  value text
+}
+
+Table internet_account {
+  id integer [pk, increment]
+  account_key varchar
+  feature varchar
+  label varchar
+  active tinyint
+  type varchar
+}
+
+Table internet_account_configs {
+  key_id integer
+  name varchar
+  value longtext
+}
+
+Table job_attribute {
+  id integer [pk, increment]
+  name varchar
+  sort integer
+  defaultvalue integer
+}
+
+Table job_group {
+  id integer [pk, increment]
+  name varchar
+  attr tinyint
+  sort integer
+  directory varchar
+  syncid integer
+  parent varchar
+}
+
+Table job_grouped {
+  job integer
+  attr integer
+  jobgroup integer
+}
+
+Table job_phase {
+  id integer [pk, increment]
+  name varchar
+  description text
+  job_id integer
+  template_id integer
+  sort integer
+  active tinyint
+  activity_sync integer
+  mandatory tinyint
+  number integer
+}
+
+Table job_remaining_budget {
+  id integer [pk, increment]
+  currency varchar
+  amount decimal
+  text text
+}
+
+Table job_remaining_hours_budget {
+  id integer [pk, increment]
+  time_amount decimal
+}
+
+Table job_responsible {
+  id integer [pk, increment]
+  job_type tinyint
+  job_id integer
+  employee_id integer
+  responsible_type_id integer
+}
+
+Table job_responsible_type {
+  id integer [pk, increment]
+  name varchar
+  description varchar
+  type tinyint
+  client_only tinyint
+  is_mandatory tinyint
+  multiple tinyint
+  display varchar
+  sort tinyint
+  show_responsible tinyint
+}
+
+Table job_status {
+  id integer [pk, increment]
+  name varchar
+  active tinyint
+  sort integer
+  setdate varchar
+  permtime tinyint
+  expense tinyint
+  planning tinyint
+}
+
+Table ma_category {
+  id integer [pk, increment]
+  name varchar
+  parentId integer
+  sortId integer
+  level integer
+}
+
+Table ma_entry {
+  id integer [pk, increment]
+  title varchar
+  text text
+  sortId integer
+  category integer
+}
+
+Table md_data {
+  id integer [pk, increment]
+  name varchar
+  job_id integer
+  mediatype integer
+  definite integer
+  employee_id integer
+}
+
+Table md_mediatype_fields {
+  id integer [pk, increment]
+  template integer
+  varname varchar
+  defaultvalue text
+  sort integer
+  obligatory tinyint
+}
+
+Table md_mediatypes {
+  id integer [pk, increment]
+  name varchar
+  sort integer
+  tender varchar
+}
+
+Table md_metadata {
+  id integer [pk, increment]
+  md_data_id integer
+  name varchar
+  value longtext
+}
+
+Table md_topic {
+  id integer [pk, increment]
+  name varchar
+  label text
+  type varchar
+  options text
+  sort integer
+}
+
+Table me_memo {
+  id integer [pk, increment]
+  title varchar
+  text text
+  changedby integer
+  changedon integer
+}
+
+Table ne_comments {
+  id integer [pk, increment]
+  newsid integer
+  comment text
+  addedby integer
+  addedon integer
+}
+
+Table ne_news {
+  id integer [pk, increment]
+  title varchar
+  link varchar
+  text text
+  addedby integer
+  addedon integer
+  changedby integer
+  changedon integer
+}
+
+Table ne_viewed {
+  news_id integer
+  user_id integer
+  time integer
+}
+
+Table nl_adressat {
+  person integer
+  mailing integer
+  gelesen datetime
+  status tinyint
+  hash varchar
+}
+
+Table nl_content {
+  id integer [pk, increment]
+  mailing integer
+  subject varchar
+  html text
+  text text
+  attachments varchar
+  images varchar
+  media varchar
+  lang varchar
+  css_edit text
+  css_mail text
+  sass_edit text
+  sass_mail text
+  img_hires integer
+}
+
+Table nl_file {
+  id integer [pk, increment]
+  mailing integer
+  contenttype varchar
+  filename varchar
+  data longblob
+  instance integer
+  ftp integer
+}
+
+Table nl_mailing {
+  id integer [pk, increment]
+  newsletter integer
+  name varchar
+  datum datetime
+  status tinyint
+  author integer
+}
+
+Table nl_newsletter {
+  id integer [pk, increment]
+  name varchar
+  template integer
+  authorname varchar
+  authoremail varchar
+  mask varchar
+  creator integer
+  sticker integer
+}
+
+Table nl_returnmails {
+  id integer [pk, increment]
+  fromheader varchar
+  timestamp integer
+  subject varchar
+  body text
+}
+
+Table nl_template {
+  id integer [pk, increment]
+  html text
+  preview varchar
+  name varchar
+  description varchar
+  css_edit text
+  css_mail text
+}
+
+Table nt_filter {
+  filterkey varchar [pk]
+  module varchar
+  origin varchar
+  type varchar
+  id varchar
+  scope varchar
+  scope_id integer
+  priority integer
+  email tinyint
+  desktop tinyint
+}
+
+Table nt_forward {
+  id integer [pk, increment]
+  orig_user integer
+  fwd_user integer
+  fwd_start date
+  fwd_end date
+  fwd_active integer
+}
+
+Table nt_message {
+  id integer [pk, increment]
+  origin_class varchar
+  origin_id integer
+  origin_user integer
+  msgtype varchar
+  single_user tinyint
+  job_id integer
+  private integer
+  priority integer
+  message_class varchar
+  origin_module varchar
+  payload integer
+  created timestamp
+  responsible_user integer
+}
+
+Table nt_payload {
+  id integer [pk, increment]
+  value text
+  message_id integer
+  name varchar
+}
+
+Table nt_queue {
+  id integer [pk, increment]
+  user_id integer
+  message_id integer
+  reminder timestamp
+  delivery tinyint
+  marked tinyint
+  priority integer
+  msgtext text
+  user_cc integer
+  fw integer
+  alert_id integer
+  desktop integer
+  is_read tinyint
+}
+
+Table oauth2_access_token {
+  id integer [pk, increment]
+  user_id integer
+  client_id varchar
+  token_type varchar
+  access_token_id varchar
+  access_token varchar
+  refresh_token varchar
+  expires timestamp
+  scopes varchar
+}
+
+Table oauth2_client {
+  id integer [pk, increment]
+  name varchar
+  redirect_uri varchar
+  client_id varchar
+  client_secret varchar
+  is_confidential tinyint
+  active tinyint
+}
+
+Table oauth2_params {
+  id integer [pk, increment]
+  client_id varchar
+  client_secret varchar
+  redirect_uri varchar
+  grant_type_id varchar
+  scopes varchar
+  state varchar
+  code_challenge varchar
+  code_challenge_method varchar
+}
+
+Table oauth_info {
+  id integer [pk, increment]
+  user_id integer
+  token_type varchar
+  access_token varchar
+  refresh_token varchar
+  expires timestamp
+  authenticator_id integer
+  authenticator_name varchar
+  foreign_id varchar
+}
+
+Table pm_attributes {
+  id integer [pk, increment]
+  name varchar
+  color varchar
+  sort integer
+}
+
+Table pm_cc {
+  id integer [pk, increment]
+  responsible integer
+  workpackage_id integer
+}
+
+Table pm_employee_workload {
+  id integer [pk, increment]
+  date date
+  employee integer
+  responsible_id integer
+  responsible_type tinyint
+  workload_level integer
+  total_hours decimal
+  planning_job_hours decimal
+  day_hours decimal
+  percentage decimal
+  job_id integer
+  time_budget_hours decimal
+}
+
+Table pm_entity {
+  id integer [pk, increment]
+  name varchar
+  color varchar
+  intern integer
+  sort integer
+}
+
+Table pm_kanban_column {
+  id integer [pk, increment]
+  short varchar
+  title varchar
+  type integer
+  is_default tinyint
+  color varchar
+  board integer
+  reduced_view tinyint
+  sort integer
+}
+
+Table pm_kanban_column_type {
+  id integer [pk, increment]
+  name varchar
+}
+
+Table pm_workload {
+  id integer [pk, increment]
+  workpackage integer
+  ma_id integer
+  responsible_id integer
+  responsible_type tinyint
+  date date
+  hours decimal
+  day_hours decimal
+  job_id integer
+  planning_job_hours decimal
+  type char
+  time_budget_hours decimal
+}
+
+Table pm_workload_level {
+  id integer [pk, increment]
+  color varchar
+  threshold integer
+}
+
+Table pm_workpackageattributes {
+  workpackage_id integer
+  attribute_id integer
+}

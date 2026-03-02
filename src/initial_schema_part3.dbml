@@ -1,0 +1,727 @@
+Table pm_workpackages {
+  id integer [pk, increment]
+  parent_id integer
+  job_id integer
+  responsible_type tinyint
+  responsible_id integer
+  number integer
+  title text
+  description text
+  start_date date
+  start_time time
+  due_date date
+  timing varchar
+  due_time time
+  is_finished tinyint
+  is_milestone tinyint
+  bookable tinyint
+  sort integer
+  uuid char
+  phase_id integer
+  planned_hours decimal
+  planned_hours_rest decimal
+  activity_id integer
+  rate_id integer
+  stafflevel integer
+  lastmod timestamp
+  lastmod_by integer
+  kanban_column_id varchar
+  kanban_column_index integer
+  exceptions text
+  time_budget tinyint
+}
+
+Table queue_task {
+  id integer [pk, increment]
+  class varchar
+  user integer
+  notify tinyint
+  try_count integer
+  in_progress tinyint
+  created_at timestamp
+  error_msg varchar
+}
+
+Table queue_task_params {
+  key_id integer
+  name varchar
+  value varchar
+}
+
+Table re_field {
+  id integer [pk, increment]
+  reporting_id integer
+  field varchar
+  width integer
+  color varchar
+  sort integer
+  is_group tinyint
+  display_mode varchar
+}
+
+Table re_filter {
+  id integer [pk, increment]
+  reporting_id integer
+  field text
+  value text
+}
+
+Table re_reporting {
+  id integer [pk, increment]
+  title varchar
+  group_by varchar
+  factory varchar
+  module varchar
+  currency varchar
+  showempty tinyint
+  includevat tinyint
+  user integer
+  sort varchar
+  subgroup varchar
+  config text
+  display_order integer
+  name varchar
+  intern_activity tinyint
+  plugin varchar
+  type integer
+  min_limit integer
+  api_visible tinyint
+  filter_expanded tinyint
+  visible_filters text
+}
+
+Table sc_orders {
+  id integer [pk, increment]
+  orderid varchar
+  delivery date
+  sent date
+  received date
+  comments varchar
+  description varchar
+  campaign varchar
+  jobnumber varchar
+  jobid integer
+  pspnumber varchar
+  buyerGLN varchar
+  ordercontact varchar
+  ordertel varchar
+  supplierGLN varchar
+  suppliercontact varchar
+  deliverypartyGLN varchar
+  currency varchar
+  filename varchar
+  estimate integer
+  type tinyint
+  status integer
+}
+
+Table sy_syncid {
+  id integer [pk, increment]
+  dataid integer
+  class varchar
+  syncid varchar
+}
+
+Table sync_adapter {
+  id integer [pk, increment]
+  adapter_id integer
+}
+
+Table sync_adapter_config {
+  sync_adapter_id integer
+  name varchar
+  value varchar
+}
+
+Table sync_event {
+  id integer [pk, increment]
+  sync_key integer
+  trigger_user integer
+  action varchar
+  timestamp timestamp
+  status tinyint
+  error_code integer
+  error_msg varchar
+}
+
+Table sync_key {
+  id integer [pk, increment]
+  object_class_name varchar
+  object_id integer
+  sync_adapter varchar
+  foreign_id varchar
+  active tinyint
+  sync_adapter_id integer
+  tenant_id integer
+}
+
+Table sync_key_custom {
+  key_id integer
+  name varchar
+  value varchar
+}
+
+Table sync_key_multiple {
+  id integer [pk, increment]
+  sync_key integer
+  object_class_name varchar
+  object_id integer
+  foreign_id varchar
+}
+
+Table sync_queue {
+  id integer [pk, increment]
+  sync_key integer
+  trigger_user integer
+  try_count integer
+  action varchar
+  syncing tinyint
+  lastmod timestamp
+  object_description varchar
+  object_type varchar
+  error_msg varchar
+}
+
+Table sync_state {
+  id integer [pk, increment]
+  sync_adapter varchar
+  last_sync timestamp
+  foreign_state text
+  last_try timestamp
+  status tinyint
+  error_msg text
+  sync_adapter_id integer
+}
+
+Table sync_webhook {
+  id integer [pk, increment]
+  trigger_id integer
+  description varchar
+  url text
+  postbody tinyint
+  try_limit integer
+  active tinyint
+  fields text
+  api_version integer
+  secret varchar
+}
+
+Table te_dispatch {
+  id integer [pk, increment]
+  tender integer
+  dispatched tinyint
+  receiver text
+  type tinyint
+  number varchar
+  sort integer
+  date timestamp
+}
+
+Table te_document {
+  id integer [pk, increment]
+  name varchar
+  kuerzel varchar
+  template integer
+  parent integer
+  xml mediumtext
+  convert_to varchar
+  intern tinyint
+  default_costtype integer
+}
+
+Table te_offer {
+  id integer [pk, increment]
+  receiver text
+  comment text
+  amount decimal
+  hours decimal
+  display tinyint
+  tender integer
+  sort integer
+  file integer
+  dispatch integer
+  selected tinyint
+}
+
+Table te_tender {
+  id integer [pk, increment]
+  number varchar
+  job_id integer
+  phase integer
+  titel varchar
+  comment varchar
+  template integer
+  templorder integer
+  status integer
+  date date
+  geaendert datetime
+  bearbeiter varchar
+  anfrage integer
+  auftrag integer
+  dispatch integer
+  ka integer
+  rate integer
+  amount decimal
+  planned decimal
+  currency char
+  media integer
+  invoiceart integer
+  converted integer
+  comparison integer
+  purchase_order_id integer
+}
+
+Table time_attendance {
+  id integer [pk, increment]
+  employee_id integer
+  date date
+  required_hours decimal
+  default_hours decimal
+  closed_on datetime
+  lastmod timestamp
+  lastmod_by integer
+  closed_by integer
+}
+
+Table time_attendance_period {
+  id integer [pk, increment]
+  attendance_id integer
+  start time
+  end time
+  is_pause tinyint
+}
+
+Table time_attendance_workplace {
+  attendance_id integer
+  workplace integer
+}
+
+Table time_workplace {
+  id integer [pk, increment]
+  name varchar
+  sort integer
+}
+
+Table tresor_category {
+  id integer [pk, increment]
+  category varchar
+  active tinyint
+}
+
+Table tresor_passwort {
+  id integer [pk, increment]
+  shortdescription varchar
+  loginname varchar
+  loginpassword varchar
+  description text
+  url varchar
+  type_id integer
+  owner_id integer
+}
+
+Table tresor_passwort_change {
+  id integer [pk, increment]
+  change_id integer
+  timestamp timestamp
+}
+
+Table tresor_rights {
+  password_id integer
+  group_id integer
+  user_id integer
+}
+
+Table workflow {
+  id integer [pk, increment]
+  name varchar
+  description varchar
+  object varchar
+  event varchar
+  active integer
+}
+
+Table workflow_action {
+  id integer [pk, increment]
+  class varchar
+  params varchar
+}
+
+Table workflow_condition {
+  id integer [pk, increment]
+  class varchar
+  field varchar
+  value varchar
+  type varchar
+  operator varchar
+}
+
+Table workflow_context {
+  id integer [pk, increment]
+  data_class varchar
+  data_id integer
+  context_key varchar
+  context_value text
+}
+
+Table workflow_instance {
+  id integer [pk, increment]
+  workflow_id integer
+  data_id integer
+  data_class varchar
+  info varchar
+  error varchar
+  start timestamp
+  finish timestamp
+  current integer
+}
+
+Table workflow_instance_stage {
+  id integer [pk, increment]
+  state integer
+  stage_id integer
+  sequence integer
+  instance_id integer
+  runtime timestamp
+}
+
+Table workflow_log {
+  id integer [pk, increment]
+  workflow_id integer
+  stage_id integer
+  data_class varchar
+  data_id integer
+  timestamp timestamp
+  entry varchar
+  comment text
+  user integer
+  status integer
+}
+
+Table workflow_main_condition {
+  workflow_id integer
+  condition_id integer
+}
+
+Table workflow_stage {
+  id integer [pk, increment]
+  workflow_id integer
+  sequence_number integer
+  infotext varchar
+  logmsg varchar
+  type varchar
+}
+
+Table workflow_stage_action {
+  stage_id integer
+  action_id integer
+}
+
+Table workflow_stage_condition {
+  stage_id integer
+  condition_id integer
+}
+
+Table ze_abtlg {
+  abt_id integer [pk, increment]
+  bez char
+  sortid integer
+  costcentre varchar
+  division_id integer
+}
+
+Table ze_arbeit {
+  arb_id integer [pk, increment]
+  ma_id integer
+  tag date
+  std decimal
+  lei_id integer
+  ansatz decimal
+  ansatz_intern decimal
+  ansatz_intercompany decimal
+  manual_price tinyint
+  info text
+  job_id integer
+  abgerechnet tinyint
+  checked tinyint
+  rate integer
+  stueck float
+  tenant integer
+  currency_cost varchar
+  currency_price varchar
+  currency_price_intercompany varchar
+  level integer
+  workpackage_id integer
+  phase_id integer
+  external_ticket varchar
+  lastmod timestamp
+  lastmod_by integer
+  created_at timestamp
+  created_by integer
+  pending tinyint
+  valuation_factor decimal
+}
+
+Table ze_bereich {
+  ber_id integer [pk, increment]
+  kd_id integer
+  ber_nr integer
+  bez varchar
+  aktiv integer
+  start date
+  end date
+  description text
+  tenant integer
+}
+
+Table ze_client_category {
+  id integer [pk, increment]
+  name varchar
+  intern integer
+  sort integer
+  standard tinyint
+}
+
+Table ze_division {
+  id integer [pk, increment]
+  name varchar
+  sort integer
+}
+
+Table ze_ft {
+  id integer [pk, increment]
+  ftdate date
+  ftname varchar
+  tooltip text
+  dauer integer
+  updc integer
+  country integer
+  base integer
+  uuid char
+}
+
+Table ze_ft_location {
+  ft_id integer
+  location_id integer
+}
+
+Table ze_ftbase {
+  id integer [pk, increment]
+  ftname varchar
+  fix integer
+  osterd smallint
+  dayofmonth tinyint
+  month tinyint
+  dauer integer
+  country integer
+  sort integer
+  default_active integer
+}
+
+Table ze_ftbase_location {
+  ftbase_id integer
+  location_id integer
+}
+
+Table ze_ftman {
+  id integer [pk, increment]
+  ma_id integer
+  jahr integer
+  art varchar
+  tage decimal
+  changed_by varchar
+  changed_on date
+  type char
+}
+
+Table ze_job {
+  job_id integer [pk, increment]
+  kd_id integer
+  ber_nr integer
+  ber_id integer
+  jahr integer
+  auft_nr integer
+  job_nr varchar
+  bez varchar
+  aktiv integer
+  erteilt date
+  start date
+  end date
+  description text
+  jobstatus integer
+  tentative tinyint
+  extern integer
+  tenant integer
+  customnumber varchar
+  filesystem varchar
+  remainingbudget integer
+  remaininghoursbudget integer
+  preliminary_nr integer
+  lastmod timestamp
+  lastmod_by integer
+  created_at timestamp
+  created_by integer
+}
+
+Table ze_kunde {
+  kd_id integer [pk]
+  kd_nr integer
+  name varchar
+  kurzbez varchar
+  intern integer
+  aktiv integer
+  sortid integer
+  description text
+  share varchar
+  tenant integer
+  client_intern integer
+}
+
+Table ze_kunde_team {
+  client integer
+  team integer
+}
+
+Table ze_leavetype {
+  id integer [pk, increment]
+  code char
+  name varchar
+  color varchar
+  hours tinyint
+  fixed tinyint
+  account varchar
+  sort integer
+  showalways tinyint
+  requestable tinyint
+  showaccdetails tinyint
+  deductiblehours tinyint
+  autoconfirmable tinyint
+  selfdeletable tinyint
+  futuredays integer
+  min_carryover integer
+  max_carryover integer
+  auto_close tinyint
+}
+
+Table ze_leistg {
+  lei_id integer [pk, increment]
+  bez varchar
+  active integer
+  ansatz decimal
+  art integer
+  sortid integer
+  clearable integer
+  cost integer
+  enterinfo tinyint
+  costcentre varchar
+}
+
+Table ze_leistg_abtlg {
+  lei_id integer
+  abt_id integer
+}
+
+Table ze_mitarb {
+  ma_id integer [pk, increment]
+  vorname varchar
+  nachname varchar
+  kuerzel varchar
+  email varchar
+  phone varchar
+  pw varchar
+  abt_id integer
+  ma_nr integer
+  kontrolle integer
+  geburtstag date
+  aktiv integer
+  hidden integer
+  eintritt date
+  austritt date
+  gl integer
+  ahv varchar
+  hidevacation integer
+  entitlement decimal
+  auth varchar
+  tenant integer
+  vorgesetzter integer
+  level integer
+  worktime varchar
+  overtime tinyint
+  overtime_date date
+  overtime_lumpsum decimal
+  employee_number varchar
+  finance_access tinyint
+  confidentialcomment text
+  location integer
+  superuser tinyint
+  confidentialemail varchar
+  onetimepassword varchar
+  otp_backup varchar
+  previous_pw varchar
+  deleted tinyint
+  timestamp timestamp
+  use_productivity_percentage tinyint
+  productivity_percentage decimal
+  use_external_auth tinyint
+  external_id varchar
+  workplace_control tinyint
+  two_factor_auth tinyint
+  two_factor_auth_secret varchar
+  two_factor_auth_app tinyint
+  attendance integer
+}
+
+Table ze_mitazt {
+  id integer [pk, increment]
+  ma_id integer
+  jahr integer
+  rest_vj decimal
+  anspruch decimal
+  ftman decimal
+  bezogen decimal
+  planned decimal
+  beantragt decimal
+  type char
+}
+
+Table ze_offday {
+  id integer [pk, increment]
+  employee integer
+  dayofweek tinyint
+  am tinyint
+  pm bigint
+  valid_from date
+  valid_until date
+}
+
+Table ze_timeapproval {
+  id integer [pk, increment]
+  employee_id integer
+  time_period date
+  approved timestamp
+  approved_by integer
+  remark text
+}
+
+Table ze_urlaub {
+  id integer [pk, increment]
+  ma_id integer
+  datum date
+  type char
+  dauer decimal
+  updc integer
+  vornachganz char
+  uuid char
+  pending tinyint
+  deductible tinyint
+}
+
+Table ze_worktime {
+  id integer [pk, increment]
+  employee integer
+  dayofweek integer
+  am decimal
+  pm decimal
+  location integer
+  valid_from date
+  valid_until date
+}

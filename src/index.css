@@ -1,0 +1,157 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-text: var(--accent-text);
+}
+
+:root {
+  --bg: #ffffff;
+  --bg-panel: #fafafa;
+  --bg-card: #ffffff;
+  --text: #18181b;
+  --text-muted: #71717a;
+  --border: #e4e4e7;
+  --border-muted: #f4f4f5;
+  --accent: #484d56;
+  --accent-hover: #3f3f46;
+  --accent-text: #ffffff;
+
+  /* React Flow Overrides - Global */
+  --xy-selection-background-color: rgba(72, 77, 86, 0.1);
+  --xy-selection-border: 1px dotted rgba(72, 77, 86, 0.5);
+  --xy-node-boxshadow-selected: none;
+  --xy-node-boxshadow-hover: none;
+  --xy-handle-background-color: transparent;
+  --xy-handle-border-color: transparent;
+  --xy-resize-background-color: #484d56;
+}
+
+.dark {
+  --bg: #09090b;
+  --bg-panel: #18181b;
+  --bg-card: #27272a;
+  --text: #f4f4f5;
+  --text-muted: #a1a1aa;
+  --border: #3f3f46;
+  --border-muted: #52525b;
+  --accent: #c8d701;
+  --accent-hover: #b5c201;
+  --accent-text: #000000;
+  
+  /* React Flow Overrides - Dark */
+  --xy-selection-background-color: rgba(200, 215, 1, 0.1);
+  --xy-selection-border: 1px dotted rgba(200, 215, 1, 0.5);
+  --xy-resize-background-color: #c8d701;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  @apply antialiased transition-colors duration-300;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--accent-text);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-panel);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--border-muted);
+}
+
+/* React Flow Overrides */
+.react-flow__node {
+  @apply !cursor-default;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.react-flow__node:focus,
+.react-flow__node:focus-visible,
+.react-flow__node.selected,
+.react-flow__node.selected:focus,
+.react-flow__node.selected:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+.react-flow__edge {
+  @apply !cursor-default;
+}
+
+.react-flow__edge-path {
+  @apply !cursor-default;
+}
+
+.react-flow__handle {
+  @apply !w-2 !h-2 !bg-transparent !border-none;
+}
+
+.react-flow__controls {
+  background-color: var(--bg-panel) !important;
+  border-color: var(--border-muted) !important;
+  @apply !rounded-lg !overflow-hidden !shadow-2xl;
+}
+
+.react-flow__controls-button {
+  @apply !bg-transparent !border-none transition-all;
+  fill: var(--text-muted) !important;
+}
+
+.react-flow__controls-button:hover {
+  background-color: var(--bg-card) !important;
+}
+
+.react-flow__attribution {
+  @apply !bg-transparent !text-[8px];
+  color: var(--text-muted) !important;
+}
+
+.react-flow__nodesselection-rect,
+.react-flow__nodesselection {
+  display: none !important;
+  box-shadow: none !important;
+  border: none !important;
+  background: transparent !important;
+}
+
+/* LOD Optimization - Disabled per user request */
+/* [data-zoom="low"] .table-columns {
+  height: 0 !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+} */
+
+/* Ensure handles are still technically "visible" to React Flow but collapsed */
+/* [data-zoom="low"] .table-columns .react-flow__handle {
+  top: 20px !important; 
+  visibility: visible !important; 
+  opacity: 0 !important; 
+} */

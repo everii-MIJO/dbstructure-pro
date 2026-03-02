@@ -1,0 +1,1626 @@
+Table api_user_access_token {
+  id integer [pk, increment]
+  label varchar
+  user_id integer
+  token varchar
+  created_at timestamp
+  last_accessed timestamp
+  lifetime integer
+  expires_at timestamp
+  active tinyint
+}
+
+Table cal_category {
+  id integer [pk, increment]
+  name varchar
+  color varchar
+  auto integer
+  sort integer
+  intensiv integer
+}
+
+Table cal_ctag {
+  id integer [pk, increment]
+  calid integer
+  lastmod timestamp
+  changecount integer
+}
+
+Table cal_event {
+  id integer [pk, increment]
+  title text
+  description text
+  owner integer
+  active tinyint
+  created timestamp
+  location text
+  private tinyint
+  external tinyint
+  emailed text
+  changecount integer
+  color varchar
+  repeatrule integer
+  participants text
+  uuid varchar
+  lastmod timestamp
+  category integer
+  url text
+}
+
+Table cal_eventassign {
+  id integer [pk, increment]
+  event integer
+  job_id integer
+  type integer
+}
+
+Table cal_eventdates {
+  id integer [pk, increment]
+  event integer
+  date date
+  start time
+  end time
+}
+
+Table cal_jobassign {
+  event integer
+  job integer
+  type integer
+}
+
+Table cal_repeatrule {
+  id integer [pk, increment]
+  mode integer
+  start date
+  until date
+  times integer
+  week_or_month integer
+  repetition integer
+  frequency integer
+  days_of_week varchar
+  exceptions text
+  allday tinyint
+  time_start time
+  time_end time
+}
+
+Table cal_resource {
+  id integer [pk, increment]
+  title varchar
+  description text
+  active tinyint
+  sort integer
+}
+
+Table cal_resourceassign {
+  event integer
+  resource integer
+}
+
+Table cal_share {
+  event_id integer
+  group_id integer
+  user_id integer
+  alert text
+}
+
+Table co_ansatz {
+  id integer [pk, increment]
+  ma integer
+  ab date
+  bis date
+  intern decimal
+  extern decimal
+  intercompany decimal
+}
+
+Table cockpit_lunch_position {
+  id integer [pk, increment]
+  date date
+  tenant integer
+  restaurant varchar
+  employee varchar
+  menu varchar
+  price decimal
+  paid decimal
+}
+
+Table comm_attachment {
+  file_id integer
+  message_id integer
+}
+
+Table comm_comment_recipient {
+  message_id integer
+  employee_id integer
+}
+
+Table comm_connection {
+  id integer [pk, increment]
+  message_id integer
+  data_class varchar
+  data_id integer
+}
+
+Table comm_mail {
+  id integer [pk, increment]
+  subject varchar
+  sender integer
+  body longtext
+  message_id varchar
+  in_reply_to varchar
+  rawfile varchar
+  uuid char
+}
+
+Table comm_mail_contact {
+  id integer [pk, increment]
+  name varchar
+  email varchar
+  contact integer
+}
+
+Table comm_mail_copyrecipient {
+  contact_id integer
+  mail_id integer
+}
+
+Table comm_mail_recipient {
+  contact_id integer
+  mail_id integer
+}
+
+Table comm_mail_references {
+  id integer [pk, increment]
+  reference_id varchar
+  mail_id integer
+  sort integer
+}
+
+Table comm_mail_subjecttag {
+  id integer [pk, increment]
+  tag varchar
+  active tinyint
+}
+
+Table comm_message {
+  id integer [pk, increment]
+  simple_content text
+  text text
+  date timestamp
+  sender integer
+  type tinyint
+  deleted tinyint
+  expanded tinyint
+  mail_id integer
+  thumbnail integer
+}
+
+Table comm_reaction {
+  id integer [pk, increment]
+  message_id integer
+  user_id integer
+  emoji varchar
+}
+
+Table comm_readby {
+  message_id integer
+  emp_id integer
+}
+
+Table crm_blog {
+  id integer [pk, increment]
+  titel varchar
+  text text
+  date date
+  user integer
+  da_type tinyint
+  da_id integer
+  company integer
+}
+
+Table crm_category {
+  id integer [pk, increment]
+  name varchar
+  sort integer
+  aktiv tinyint
+  erstellt datetime
+  syncable tinyint
+}
+
+Table crm_channel {
+  id integer [pk, increment]
+  name varchar
+  type_id integer
+  company_id integer
+  active tinyint
+}
+
+Table crm_channel_type {
+  id integer [pk, increment]
+  name varchar
+  sort integer
+}
+
+Table crm_sticker {
+  id integer [pk, increment]
+  name varchar
+  user integer
+  sort integer
+  aktiv tinyint
+  erstellt datetime
+  category integer
+  uuid char
+  lastmod timestamp
+}
+
+Table crm_stuck {
+  sticker integer
+  da_id integer
+  da_type tinyint
+}
+
+Table crm_syncedobject {
+  id integer [pk, increment]
+  da_id integer
+  da_type integer
+  synced_relation integer
+  sticker integer
+  active integer
+}
+
+Table cron_job {
+  id integer [pk, increment]
+  class varchar
+  month varchar
+  day varchar
+  dayofweek varchar
+  hour varchar
+  minute varchar
+  minimum_interval varchar
+  pid integer
+  active tinyint
+  lastrun_start timestamp
+  lastrun_end timestamp
+  lastrun_success tinyint
+  output text
+}
+
+Table da_adresse {
+  id integer [pk, increment]
+  strasse varchar
+  nummer varchar
+  type tinyint
+  da_id integer
+  da_type tinyint
+  plz varchar
+  land integer
+  postfach varchar
+  bezeichnung varchar
+  ort varchar
+  zusatz varchar
+  finance_address_id varchar
+}
+
+Table da_anschrift {
+  adresse integer
+  person integer
+}
+
+Table da_bankdata {
+  id integer [pk, increment]
+  account varchar
+  iban varchar
+  bic varchar
+  blz varchar
+  aba varchar
+  bankname varchar
+  text1 varchar
+  text2 varchar
+  text3 varchar
+  defaultacct tinyint
+  da_type tinyint
+  da_id integer
+  bankreference varchar
+  paymentform varchar
+}
+
+Table da_branche {
+  id integer [pk, increment]
+  name varchar
+  type set
+}
+
+Table da_companyaccount {
+  id integer [pk, increment]
+  company integer
+  tenant integer
+  type integer
+  debtor varchar
+  creditor varchar
+  expense varchar
+  paymentcondition_creditor integer
+  paymentcondition_debtor integer
+}
+
+Table da_country {
+  id integer [pk, increment]
+  name varchar
+  phone varchar
+  iso char
+  kfz char
+  addresstemplate text
+  tld varchar
+  currency varchar
+  languages varchar
+}
+
+Table da_data_protection {
+  id integer [pk, increment]
+  contact_id integer
+  user_id integer
+  code tinyint
+  active tinyint
+  date date
+  reason text
+}
+
+Table da_email {
+  id integer [pk, increment]
+  adresse varchar
+  da_id integer
+  da_type tinyint
+  standard tinyint
+  type tinyint
+}
+
+Table da_firma {
+  id integer [pk, increment]
+  name varchar
+  zusatz varchar
+  homepage text
+  kommentar text
+  type integer
+  branche integer
+  adresse integer
+  rechnung integer
+  zustellen integer
+  isdn varchar
+  prioritaet tinyint
+  newkontakt integer
+  email varchar
+  custom1 varchar
+  custom2 varchar
+  aktiv tinyint
+  groupid integer
+  taxid varchar
+  customerno varchar
+  gln varchar
+  image integer
+  syncid varchar
+  legaltype tinyint
+  finance_address_id varchar
+  migrosid varchar
+  termofpayment integer
+}
+
+Table da_firma_tenant {
+  firma_id integer
+  tenant_id integer
+}
+
+Table da_group {
+  id integer [pk, increment]
+  name varchar
+  person set
+  company set
+  sort integer
+}
+
+Table da_group_acl {
+  groupid integer
+  role integer
+  level tinyint
+}
+
+Table da_kontakt {
+  person integer
+  firma integer
+}
+
+Table da_object {
+  id integer [pk, increment]
+  class varchar
+  name varchar
+  user integer
+  data text
+}
+
+Table da_partner {
+  firma integer
+  firma2 integer
+  bezeichnung varchar
+  bezeichnung2 varchar
+}
+
+Table da_person {
+  id integer [pk, increment]
+  nachname varchar
+  vorname varchar
+  geschlecht char
+  titel varchar
+  anrede enum
+  sprache char
+  geburtstag date
+  birthdaylist tinyint
+  kommentar text
+  type tinyint
+  abteilung varchar
+  email varchar
+  aktiv tinyint
+  groupid integer
+  uuid char
+  lastmod timestamp
+  phone varchar
+  image integer
+  syncid varchar
+  migrospnr varchar
+  titel_postfix varchar
+  funktion varchar
+  namepartner varchar
+  gbpartner date
+}
+
+Table da_personuser {
+  user integer
+  person integer
+  anrede enum
+  sprache char
+}
+
+Table da_phone {
+  id integer [pk, increment]
+  nummer varchar
+  da_id integer
+  da_type tinyint
+  type tinyint
+  syncid varchar
+}
+
+Table da_receiver {
+  id integer [pk, increment]
+  company_id integer
+  contact_id integer
+  address_id integer
+  company_name text
+  contact_name text
+  address_name text
+  country_id integer
+}
+
+Table da_suchfeld {
+  id integer [pk, increment]
+  name varchar
+  gruppe integer
+  feld varchar
+  tabelle varchar
+  suche tinyint
+  anzeige tinyint
+  class varchar
+  datype integer
+  sort integer
+}
+
+Table da_suchgruppe {
+  id integer [pk, increment]
+  name varchar
+  sqlclause varchar
+  parent integer
+  class varchar
+  sort integer
+}
+
+Table da_templates {
+  id integer [pk, increment]
+  xsltfile varchar
+  label varchar
+  xmlclass varchar
+  required_fields varchar
+}
+
+Table da_vcardextras {
+  id integer [pk, increment]
+  da_id integer
+  da_type integer
+  xkey varchar
+  data text
+  params varchar
+}
+
+Table doc_ablage {
+  id integer [pk, increment]
+  name varchar
+  verzeichnis varchar
+  filesystem integer
+  type varchar
+  sort integer
+}
+
+Table doc_art {
+  id integer [pk, increment]
+  name varchar
+  vorlage varchar
+  kuerzel varchar
+  ablagen varchar
+  meta varchar
+  filetype integer
+  creator varchar
+}
+
+Table doc_document {
+  id integer [pk, increment]
+  name varchar
+  job integer
+  verzeichnis varchar
+  art integer
+  filetype integer
+  erstellt datetime
+  autor integer
+  ablage integer
+  version smallint
+  zusatz varchar
+  private tinyint
+  status tinyint
+  xml mediumtext
+  duplicationid integer
+  attribute integer
+}
+
+Table doc_filetype {
+  id integer [pk, increment]
+  name varchar
+  mime varchar
+  extension varchar
+  mac varchar
+}
+
+Table doc_meta {
+  id integer [pk, increment]
+  document integer
+  type integer
+  value text
+  optional tinyint
+  depopt integer
+}
+
+Table doc_metatype {
+  id integer [pk, increment]
+  name varchar
+  da_type integer
+  class varchar
+  object varchar
+  modify tinyint
+  search integer
+}
+
+Table edi_migrospos {
+  id integer [pk, increment]
+  orderid integer
+  supplier varchar
+  amount double
+  ordernr varchar
+  pos integer
+  pid integer
+  qty integer
+  campaign varchar
+  estimatepos integer
+}
+
+Table edi_productcodes {
+  id integer [pk, increment]
+  mainkey integer
+  code integer
+  intern varchar
+  extern varchar
+  sort integer
+}
+
+Table fi_account {
+  id integer [pk, increment]
+  fi_kostenart_id integer
+  income varchar
+  expense varchar
+  foreignincome varchar
+  foreignexpense varchar
+  costcentreincome varchar
+  costcentreexpense varchar
+  EUincome varchar
+  EUexpense varchar
+  costcentreEUincome varchar
+  costcentreEUexpense varchar
+  costcentreforeignincome varchar
+  costcentreforeignexpense varchar
+  internalincome varchar
+  internalexpense varchar
+  tenant integer
+}
+
+Table fi_billing {
+  pos integer
+  invoice integer
+  type tinyint
+  reference_id integer
+  user integer
+  time timestamp
+  text text
+  amount decimal
+  pdf tinyint
+  sort tinyint
+}
+
+Table fi_bordereau {
+  id integer [pk, increment]
+  status tinyint
+  name varchar
+  zeitraum varchar
+  nummer varchar
+  job integer
+  kunde integer
+  zahlung tinyint
+  beschreibung text
+  bemerkung text
+  datum date
+  ma integer
+  empfaenger text
+  spec varchar
+  custom text
+  edifact text
+  vatcorrection tinyint
+  cleared date
+  waehrung char
+  language varchar
+  migrosorder varchar
+  tenant integer
+  file integer
+  export integer
+}
+
+Table fi_budget {
+  id integer [pk, increment]
+  type integer
+  cost integer
+  year year
+  intern tinyint
+  tenant integer
+  amount decimal
+  currency char
+  time decimal
+}
+
+Table fi_cost_tenant {
+  id integer [pk, increment]
+  cost_id integer
+  tenant_id integer
+  al tinyint
+}
+
+Table fi_costcentre {
+  id integer [pk, increment]
+  name varchar
+  special tinyint
+  number varchar
+  type integer
+  target varchar
+  tenant integer
+  sort integer
+}
+
+Table fi_costcentre_cost {
+  account_id integer
+  cost_id integer
+}
+
+Table fi_dunning_document {
+  id integer [pk, increment]
+  invoice integer
+  file integer
+  dunning_level integer
+  dunning_date date
+  grace_period tinyint
+  payment_received tinyint
+  grace_expires date
+}
+
+Table fi_dunning_level {
+  id integer [pk, increment]
+  code varchar
+  name varchar
+  sort integer
+  pdf_title varchar
+  pdf_text text
+  email_subject varchar
+  email_body text
+  grace_period integer
+}
+
+Table fi_exchangerate {
+  id integer [pk, increment]
+  date date
+  fromcurrency varchar
+  tocurrency varchar
+  rate decimal
+}
+
+Table fi_exportjournal {
+  id integer [pk, increment]
+  user_id integer
+  tenant integer
+  type tinyint
+  time timestamp
+  bookingdate date
+  filename varchar
+}
+
+Table fi_finance_account {
+  id integer [pk, increment]
+  name varchar
+  number varchar
+  type integer
+  target varchar
+  tenant integer
+  sort integer
+  servicetype integer
+  accountrole integer
+  rate_id integer
+  lzbcode varchar
+  ledger tinyint
+}
+
+Table fi_finance_account_cost {
+  account_id integer
+  cost_id integer
+}
+
+Table fi_forecast {
+  id integer [pk, increment]
+  comment varchar
+  status tinyint
+  year integer
+  start tinyint
+}
+
+Table fi_forecast_confirm {
+  id integer [pk, increment]
+  version_id integer
+  user_id integer
+  confirm_time timestamp
+}
+
+Table fi_forecast_entry {
+  id integer [pk, increment]
+  version_id integer
+  client_id integer
+  group_id integer
+  group_type tinyint
+  tenant integer
+  month tinyint
+  amount decimal
+  is_sum tinyint
+  lastmod timestamp
+  lastmod_by integer
+}
+
+Table fi_forecast_entry_costcategory {
+  id integer [pk, increment]
+  version_id integer
+  client_id integer
+  area_id integer
+  task_id integer
+  group_id integer
+  group_type tinyint
+  tenant integer
+  month tinyint
+  cost_id integer
+  amount decimal
+  is_sum tinyint
+}
+
+Table fi_forecast_note {
+  id integer [pk, increment]
+  version_id integer
+  group_id integer
+  group_type tinyint
+  note text
+  user_id integer
+  lastmod timestamp
+}
+
+Table fi_grp {
+  id integer [pk, increment]
+  name varchar
+  label varchar
+  sortid integer
+}
+
+Table fi_has_percentage {
+  id integer [pk, increment]
+  invoicepos integer
+  estimatepos integer
+  percent decimal
+  type integer
+  cost integer
+}
+
+Table fi_honorar {
+  jobid integer
+  type integer
+  ka integer
+  field varchar
+  prozent decimal
+  cost integer
+}
+
+Table fi_imported_invoice {
+  id integer [pk, increment]
+  object_class_name varchar
+  object_id integer
+  source_service varchar
+  raw_json mediumtext
+}
+
+Table fi_invoice {
+  id integer [pk, increment]
+  serial integer
+  art tinyint
+  datum date
+  nummer varchar
+  name varchar
+  zeitraum varchar
+  waehrung char
+  exchangerate integer
+  exchangeratecharge decimal
+  bkauf integer
+  beschreibung text
+  bemerkung text
+  sendedatum date
+  sendema integer
+  bezahlt date
+  status tinyint
+  job integer
+  kunde integer
+  bordereau integer
+  empfaenger text
+  lieferant varchar
+  lieferantid integer
+  custom text
+  leistung date
+  export integer
+  spec varchar
+  edifact text
+  vaterror decimal
+  file integer
+  termofpayment integer
+  paymentmethod integer
+  tenant integer
+  tenantreceiver integer
+  bankaccount varchar
+  paymentreference varchar
+  cash tinyint
+  print_background tinyint
+  language varchar
+  migrosorder varchar
+  taxregion tinyint
+  staffexpense integer
+  discountfirstpercent decimal
+  discountfirstdays integer
+  discountsecondpercent decimal
+  discountseconddays integer
+  exportable tinyint
+  canceled_invoice integer
+  docfile_sent date
+  created timestamp
+  created_by integer
+  lastmod timestamp
+  lastmod_by integer
+  printpaymentform tinyint
+  servicestart date
+  serviceend date
+  markupperposition tinyint
+  ordernumber varchar
+  dunninglevel integer
+}
+
+Table fi_invoice_attachment {
+  id integer [pk, increment]
+  invoice integer
+  attached_id integer
+  sort integer
+  checked integer
+}
+
+Table fi_invoicepos {
+  id integer [pk, increment]
+  text text
+  betrag decimal
+  price decimal
+  gross decimal
+  ka integer
+  calc varchar
+  sort integer
+  kvpos integer
+  billed tinyint
+  billingtype tinyint
+  mwst decimal
+  vat decimal
+  invoice integer
+  bordereau integer
+  job integer
+  grp integer
+  income tinyint
+  effective tinyint
+  rate integer
+  percent integer
+  servicetype integer
+  channel_id integer
+  taxcode varchar
+  kvpos_in integer
+  migrospos integer
+  taxcode_id integer
+  account integer
+  costcentre integer
+  costcentre_number varchar
+  cost decimal
+  costignore decimal
+  feebase decimal
+  surcharge decimal
+  phase_id integer
+  dateofissue date
+  servicestart date
+  serviceend date
+  internal_info text
+  tenant integer
+  related_rate integer
+}
+
+Table fi_kostenart {
+  id integer [pk, increment]
+  name varchar
+  active integer
+  attr_agentur tinyint
+  attr_offert tinyint
+  attr_honorar tinyint
+  attr_charge tinyint
+  attr_incentive tinyint
+  attr_forecast tinyint
+  spezial tinyint
+  sort integer
+  attr_grp integer
+  category integer
+  attr_calccharge tinyint
+  media_provision integer
+}
+
+Table fi_kv {
+  id integer [pk, increment]
+  name varchar
+  nummer varchar
+  version varchar
+  bemerkungen text
+  status tinyint
+  defdatum date
+  last_def_date date
+  gendatum date
+  defma integer
+  genma integer
+  vorlage tinyint
+  vorlage_category integer
+  vorlage_sort integer
+  waehrung char
+  jobid integer
+  beschreibung text
+  empfaenger text
+  spec varchar
+  custom text
+  art integer
+  tenant integer
+  language varchar
+  migrosorder varchar
+  excelkv tinyint
+  migrosfile integer
+  internal tinyint
+  file integer
+  taxregion tinyint
+  lastmod timestamp
+  lastmod_by integer
+  lead integer
+  servicestart date
+  serviceend date
+  markupperposition tinyint
+  probability integer
+  created_at timestamp
+  created_by integer
+}
+
+Table fi_kv_billdate {
+  id integer [pk, increment]
+  kv_id integer
+  date date
+  percentage decimal
+  amount decimal
+  text text
+  invoicepos integer
+}
+
+Table fi_kv_template_category {
+  id integer [pk, increment]
+  name varchar
+  client tinyint
+  sort integer
+}
+
+Table fi_kv_type {
+  id integer [pk, increment]
+  name varchar
+  pattern varchar
+  is_default tinyint
+}
+
+Table fi_kvpos {
+  id integer [pk, increment]
+  kvid integer
+  text text
+  ka integer
+  calc varchar
+  betrag decimal
+  price decimal
+  cost decimal
+  costignore decimal
+  currency_cost varchar
+  feebase decimal
+  sort integer
+  grp integer
+  mwst decimal
+  vat decimal
+  rate integer
+  percent integer
+  servicetype integer
+  migrospos integer
+  supplier_id integer
+  channel_id integer
+  phase_id integer
+  taxcode_id integer
+  account integer
+  costcentre integer
+  costcentre_number varchar
+  servicestart date
+  serviceend date
+  internal_info text
+  tenant integer
+  related_rate integer
+}
+
+Table fi_layoutpos {
+  id integer [pk, increment]
+  parent integer
+  type varchar
+  ka integer
+  text text
+  sort integer
+  copyfrom integer
+  phase_id integer
+  collapsed tinyint
+}
+
+Table fi_lead {
+  id integer [pk, increment]
+  name varchar
+  client_id integer
+}
+
+Table fi_ledger {
+  id integer [pk, increment]
+  name varchar
+  currency char
+  code varchar
+  tenant integer
+  account integer
+  sort integer
+}
+
+Table fi_ledger_entry {
+  id integer [pk, increment]
+  date date
+  serial varchar
+  text text
+  income decimal
+  expense decimal
+  balance decimal
+  ledger integer
+  period integer
+  fixed tinyint
+  is_carryover tinyint
+  created integer
+  file integer
+  taxcode_id integer
+  account integer
+  exported tinyint
+  export_date date
+  exported_by integer
+}
+
+Table fi_ledger_period {
+  id integer [pk, increment]
+  start date
+  end date
+  name varchar
+  ledger integer
+  carryover decimal
+}
+
+Table fi_leistg_unit {
+  id integer [pk, increment]
+  singular varchar
+  plural varchar
+  istime integer
+  flat integer
+  hoursperunit integer
+  isocode varchar
+  sort integer
+  tkpunit integer
+}
+
+Table fi_migrospos {
+  id integer [pk, increment]
+  hauptkosten integer
+  warengruppe integer
+  positionsnummer bigint
+}
+
+Table fi_payment {
+  id integer [pk, increment]
+  date date
+  observation text
+  amount decimal
+  invoice integer
+}
+
+Table fi_paymentcondition {
+  id integer [pk, increment]
+  name varchar
+  code varchar
+  days integer
+  type integer
+  target varchar
+  active integer
+  tenant integer
+  dflt integer
+  sort integer
+}
+
+Table fi_position_percent {
+  id integer [pk, increment]
+  percent decimal
+  type integer
+  cost integer
+  rate integer
+  base_amount decimal
+  language varchar
+}
+
+Table fi_position_rate {
+  id integer [pk, increment]
+  baserate integer
+  stafflevel integer
+  number decimal
+  unit integer
+  price decimal
+  cost decimal
+  subtotal decimal
+  language varchar
+  currency varchar
+  currency_cost varchar
+  exchangerate integer
+  editedfields varchar
+  lockedfield varchar
+  create_text tinyint
+  create_text_priceadjust tinyint
+}
+
+Table fi_position_rate_multiplier {
+  id integer [pk, increment]
+  number decimal
+  unit integer
+  pos_rate_id integer
+}
+
+Table fi_purchaseorders {
+  id integer [pk, increment]
+  ponumber varchar
+  state integer
+  date date
+  delivery_date date
+  job_id integer
+  phase_id integer
+  supplier_id integer
+  cost_id integer
+  employee_id integer
+  text text
+  amount decimal
+  gross decimal
+  mwst decimal
+  currency varchar
+  bill tinyint
+  tender_id integer
+  file integer
+  taxcode_id integer
+  tenant integer
+}
+
+Table fi_recurring_amount {
+  id integer [pk, increment]
+  job_id integer
+  tenant integer
+  startdate date
+  monthinterval integer
+  enddate date
+  active integer
+  cost_id integer
+  phase_id integer
+  account integer
+  taxcode_id integer
+  vat_percentage decimal
+  amount decimal
+  text text
+  sort integer
+  invoicetype integer
+  rate integer
+  percent integer
+}
+
+Table fi_recurring_amount_percent {
+  id integer [pk, increment]
+  percent decimal
+  type integer
+  cost integer
+  base_amount decimal
+  language varchar
+}
+
+Table fi_recurring_amount_rate {
+  id integer [pk, increment]
+  baserate integer
+  stafflevel integer
+  number decimal
+  unit integer
+  price decimal
+  cost decimal
+  subtotal decimal
+  language varchar
+  currency varchar
+  create_text tinyint
+  create_text_priceadjust tinyint
+}
+
+Table fi_recurring_date {
+  id integer [pk, increment]
+  recurring_amount integer
+  date date
+  invoicepos integer
+  layoutpos integer
+  skipped smallint
+}
+
+Table fi_staffexpense {
+  id integer [pk, increment]
+  employee_id integer
+  number varchar
+  state tinyint
+  date date
+  description text
+  export integer
+  payment_date date
+  file integer
+  append_receipts tinyint
+  approval_on datetime
+  approval_by integer
+  exportable tinyint
+}
+
+Table fi_supplier_surcharge {
+  id integer [pk, increment]
+  supplier_id integer
+  cost_id integer
+  percent decimal
+  sort integer
+}
+
+Table fi_tax_code {
+  id integer [pk, increment]
+  name varchar
+  text text
+  code varchar
+  rate decimal
+  type integer
+  target integer
+  active integer
+  tenant integer
+  dflt integer
+  sort integer
+  info text
+}
+
+Table fi_taxcodes {
+  id integer [pk, increment]
+  code varchar
+  rate decimal
+  coef decimal
+  code2 varchar
+  code3 varchar
+  code4 varchar
+  code5 varchar
+  code6 varchar
+  code7 varchar
+  code8 varchar
+  tenant integer
+}
+
+Table fi_taxrates {
+  id integer [pk, increment]
+  tenant integer
+  code integer
+  rate double
+}
+
+Table fi_valuation_entry {
+  id integer [pk, increment]
+  level integer
+  data_id integer
+  month smallint
+  year smallint
+  valuation decimal
+  valuation_from date
+  valuation_to date
+  deferred_income decimal
+  wip decimal
+  outstanding_invoice decimal
+  progress decimal
+  comment text
+  currency char
+  lastmod timestamp
+  lastmod_by integer
+}
+
+Table fi_workassignment {
+  id integer [pk, increment]
+  kvpos_id integer
+  ma_id integer
+  hours decimal
+  date date
+}
+
+Table file_base {
+  id integer [pk, increment]
+  size integer
+  localstore varchar
+  name varchar
+  type varchar
+  time timestamp
+  preview blob
+  version integer
+  job integer
+  user integer
+  uuid char
+}
+
+Table file_import {
+  id integer [pk, increment]
+  file integer
+  sender integer
+  date timestamp
+  state integer
+  progress integer
+  progress_threshold integer
+  error text
+  logfile integer
+  totalrows integer
+  processedrows integer
+  errorrows integer
+}
+
+Table file_import_user {
+  import_id integer
+  user_id integer
+}
+
+Table file_mimetype {
+  id integer [pk, increment]
+  name varchar
+  mime varchar
+  extension varchar
+}
+
+Table file_related {
+  file integer
+  id integer [pk]
+  class varchar
+}
+
+Table file_tag {
+  id integer [pk, increment]
+  name varchar
+  sort integer
+}
+
+Table file_tags {
+  file_id integer
+  tag_id integer
+}
+
+Table in_aias {
+  control varchar [pk]
+  object text
+  userid integer
+}
+
+Table in_alert {
+  id integer [pk, increment]
+  user_id integer
+  data_class varchar
+  data_id integer
+  eventtime timestamp
+  rule varchar
+  action varchar
+  xtra_headers text
+  uuid char
+  lastmod timestamp
+}
+
+Table in_authlog {
+  id integer [pk, increment]
+  time timestamp
+  ip varchar
+  loggedin_user integer
+  affected_user integer
+  message varchar
+  user_agent varchar
+  code integer
+  failcount integer
+  affected_kuerzel varchar
+}
+
+Table in_base_format {
+  id integer [pk, increment]
+  name varchar
+  active integer
+  number varchar
+  money varchar
+  percent varchar
+  incoming_money varchar
+  dflt integer
+  rate_money varchar
+  locale varchar
+}
+
+Table in_class {
+  id varchar [pk]
+  class varchar
+  type varchar
+  module varchar
+}
+
+Table in_config {
+  id varchar [pk]
+  module varchar
+  user integer
+  type integer
+  value text
+  grp enum
+  ctrl varchar
+}
+
+Table in_content_connection {
+  id integer [pk, increment]
+  data_class varchar
+  data_field varchar
+  data_id integer
+  file_id integer
+}
+
+Table in_currency {
+  id integer [pk, increment]
+  name varchar
+  iso varchar
+  sort integer
+}
+
+Table in_custom_fields {
+  id integer [pk, increment]
+  data_class varchar
+  data_id integer
+  field varchar
+  value text
+}
+
+Table in_datalogged {
+  id integer [pk, increment]
+  dataid integer
+  phaseid integer
+  class varchar
+  user integer
+  code varchar
+  changed text
+  time timestamp
+  status integer
+  reason text
+}
+
+Table in_dates {
+  date date [pk]
+  year smallint
+  month tinyint
+  day tinyint
+  week tinyint
+  yearweek varchar
+  quarter tinyint
+  year_and_month date
+  year_and_week date
+  week_day tinyint
+  weekend tinyint
+  holiday tinyint
+}
+
+Table in_default_text {
+  id integer [pk, increment]
+  class varchar
+  field varchar
+  type integer
+  tenant integer
+  text text
+}
+
+Table in_email_log {
+  id integer [pk, increment]
+  from_address varchar
+  from_name varchar
+  to_addresses text
+  cc_addresses text
+  bcc_addresses text
+  subject text
+  success tinyint
+  error text
+  module varchar
+  timestamp timestamp
+  data_class varchar
+  data_id integer
+}
+
+Table in_filesystem {
+  id integer [pk, increment]
+  name varchar
+  root varchar
+  pattern varchar
+  filesep varchar
+  invalidchars varchar
+  createsubdirs integer
+  replacechars varchar
+  maxlen_filename integer
+  maxlen_dirname integer
+  client_group varchar
+  directory_permission varchar
+  cifsacl text
+  tenant integer
+  unix_baselink varchar
+  win_baselink varchar
+  mac_baselink varchar
+  dflt integer
+  plugin varchar
+  retry_interval decimal
+}
+
+Table in_heartbeat {
+  id integer [pk, increment]
+  date date
+  inTimestamp integer
+  outTimestamp integer
+  beater varchar
+}
