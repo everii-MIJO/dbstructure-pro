@@ -686,7 +686,7 @@ Table fi_bordereau {
 }
 
 Table fi_budget {
-  id integer [pk, increment]
+  id integer
   type integer
   cost integer
   year year
