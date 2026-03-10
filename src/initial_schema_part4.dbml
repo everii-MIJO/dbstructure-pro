@@ -557,7 +557,6 @@ Ref: in_content_connection.data_id > ze_kunde.kd_id
 Ref: nt_message.payload > nt_payload.id
 Ref: sc_orders.estimate > fi_kv.id
 Ref: te_document.default_costtype > fi_kostenart.id
-Ref: workflow.event > cal_event.id
 Ref: ze_job.remainingbudget > job_remaining_budget.id
 Ref: ze_job.remaininghoursbudget > job_remaining_hours_budget.id
 Ref: ze_kunde.client_intern > ze_kunde.kd_id

@@ -45,7 +45,7 @@ export const RelationEdge = memo(({
     ...style,
     pointerEvents: 'none' as const,
     strokeWidth: isHighlighted ? 3 : style.strokeWidth || 1,
-    stroke: isHighlighted ? '#c8d700' : style.stroke,
+    stroke: isHighlighted ? 'var(--accent)' : style.stroke,
     opacity: isHighlighted ? 1 : (isDimmed ? 0.1 : (style.opacity || 0.4)),
     zIndex: isHighlighted ? 1000 : 0,
   };

@@ -243,7 +243,7 @@ export function calculateLayout(schema: Schema) {
     sourceHandle: `source-${rel.fromColumn}`,
     targetHandle: `target-${rel.toColumn}`,
     type: 'relation',
-    style: { stroke: '#c8d700', strokeWidth: 1, opacity: 0.4 },
+    style: { stroke: 'var(--accent)', strokeWidth: 1, opacity: 0.4 },
     data: { relationship: rel }
   }));
 
