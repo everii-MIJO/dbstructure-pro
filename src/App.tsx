@@ -112,25 +112,10 @@ export default function App() {
   // Initialize Worker
   useEffect(() => {
     workerRef.current = new Worker(new URL('./worker.ts', import.meta.url), { type: 'module' });
-    
-    workerRef.current.onmessage = (e) => {
-      const { type, payload } = e.data;
-      if (type === 'PARSE_COMPLETE') {
-        const { schema, nodes, edges } = payload;
-        setSchema(schema);
-        setNodes(nodes);
-        setEdges(edges);
-        setIsLoaded(true);
-      } else if (type === 'PARSE_ERROR') {
-        console.error('Worker parsing error:', payload);
-        setIsLoaded(true); // Stop loading even on error
-      }
-    };
-
     return () => {
       workerRef.current?.terminate();
     };
-  }, [setSchema, setNodes, setEdges, setIsLoaded]);
+  }, []);
 
   // Apply theme
   useEffect(() => {
@@ -178,33 +163,6 @@ export default function App() {
           console.error("Failed to load saved data:", e);
         }
       }
-
-      if (serverData && localData && localData.schema) {
-        // Merge: use server schema, but keep local node positions
-        const localPositions = new Map(localData.nodes.map((n: any) => [n.id, n.position]));
-        const mergedNodes = serverData.nodes.map((n: any) => ({
-          ...n,
-          position: localPositions.get(n.id) || n.position
-        }));
-        setSchema(serverData.schema);
-        setNodes(processNodes(mergedNodes));
-        setEdges(serverData.edges || []);
-        setNotes(serverData.notes || localData.notes || []);
-        setIsLoaded(true);
-      } else if (serverData) {
-        setSchema(serverData.schema);
-        setNodes(processNodes(serverData.nodes));
-        setEdges(serverData.edges || []);
-        setNotes(serverData.notes || []);
-        setIsLoaded(true);
-      } else if (localData && localData.schema) {
-        setSchema(localData.schema);
-        setNodes(processNodes(localData.nodes));
-        setEdges(localData.edges || []);
-        setNotes(localData.notes || []);
-        setIsLoaded(true);
-      } else {
-        // Fallback: Combine and parse the initial schema using Worker
         const fullSchema = [
           schemaPart1,
           schemaPart2,
@@ -213,10 +171,36 @@ export default function App() {
         ].join('\n\n');
         
         if (workerRef.current) {
+          const handleMessage = (e: MessageEvent) => {
+          const { type, payload } = e.data;
+          if (type === 'PARSE_COMPLETE') {
+            workerRef.current!.removeEventListener('message', handleMessage);
+            const { schema, nodes, edges } = payload;
+            
+            // Merge positions from server or local data
+            const savedNodes = serverData?.nodes || localData?.nodes || [];
+            const savedPositions = new Map(savedNodes.map((n: any) => [n.id, n.position]));
+            
+            const mergedNodes = nodes.map((n: any) => ({
+              ...n,
+              position: savedPositions.get(n.id) || n.position
+            }));
+
+            setSchema(schema);
+            setNodes(processNodes(mergedNodes));
+            setEdges(edges);
+            setNotes(serverData?.notes || localData?.notes || []);
+            setIsLoaded(true);
+          } else if (type === 'PARSE_ERROR') {
+            workerRef.current!.removeEventListener('message', handleMessage);
+            console.error('Worker parsing error:', payload);
+            setIsLoaded(true);
+          }
+        };
+        workerRef.current.addEventListener('message', handleMessage);
           workerRef.current.postMessage({ type: 'PARSE_DBML', payload: fullSchema });
         } else {
           console.error("Worker not initialized");
-        }
       }
 
       // Set up real-time listener
