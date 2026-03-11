@@ -30,6 +30,7 @@ import { useStore } from './store/useStore';
 import { db, auth } from './lib/firebase';
 import { ref, onValue, set as firebaseSet, get } from 'firebase/database';
 import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth';
+import emailjs from '@emailjs/browser';
 
 const processNodes = (nodes: any[]) => {
   if (!nodes) return [];
@@ -280,6 +281,24 @@ export default function App() {
       isOwn: true, // Mark as own note
     };
     addNoteStore(newNote);
+        
+    // Send email notification via EmailJS
+    const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+    const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+    const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+
+    if (serviceId && templateId && publicKey) {
+      emailjs.send(
+        serviceId,
+        templateId,
+        {
+          message: noteInput,
+          time: new Date().toLocaleString(),
+        },
+        publicKey
+      ).catch(err => console.error('Failed to send email notification:', err));
+    }
+
     setNoteInput('');
   };
 
