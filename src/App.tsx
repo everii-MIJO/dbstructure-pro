@@ -67,7 +67,7 @@ export default function App() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isAuthReady, setIsAuthReady] = useState(false);
-  const [loginEmail, setLoginEmail] = useState('');
+   const [loginUsername, setLoginUsername] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
   const [loginError, setLoginError] = useState('');
 
@@ -87,11 +87,14 @@ export default function App() {
       return;
     }
     try {
-      await signInWithEmailAndPassword(auth, loginEmail, loginPassword);
-      setLoginEmail('');
+      // Firebase requires an email format, so we append a dummy domain to the username
+      // This allows users to just type "john" instead of "john@example.com"
+      const formattedEmail = `${loginUsername.toLowerCase().trim()}@dbstructure.local`;
+      await signInWithEmailAndPassword(auth, formattedEmail, loginPassword);
+      setLoginUsername('');
       setLoginPassword('');
     } catch (error: any) {
-      setLoginError('Invalid email or password.');
+      setLoginError('Invalid username or password.');
     }
   };
 
@@ -344,11 +347,11 @@ export default function App() {
           </div>
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-[var(--text-muted)] mb-1">Email</label>
+              <label className="block text-sm font-medium text-[var(--text-muted)] mb-1">Username</label>
               <input
-                type="email"
-                value={loginEmail}
-                onChange={(e) => setLoginEmail(e.target.value)}
+                type="text"
+                value={loginUsername}
+                onChange={(e) => setLoginUsername(e.target.value)}
                 className="w-full px-4 py-2.5 border border-[var(--border)] rounded-xl bg-[var(--bg-panel)] text-[var(--text)] focus:ring-2 focus:ring-accent outline-none transition-all"
                 required
               />
