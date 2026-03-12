@@ -65,8 +65,8 @@ export default function App() {
 
   const [noteInput, setNoteInput] = useState('');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthReady, setIsAuthReady] = useState(false);
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
   const [loginError, setLoginError] = useState('');
@@ -75,13 +75,8 @@ export default function App() {
   const searchRef = React.useRef<HTMLDivElement>(null);
   const workerRef = useRef<Worker | null>(null);
 
-  const handleAdminToggle = () => {
-    if (isAdmin) {
-      if (auth) signOut(auth);
-      setIsAdmin(false);
-    } else {
-      setShowLoginModal(true);
-    }
+  const handleSignOut = () => {
+    if (auth) signOut(auth);
   };
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -93,7 +88,6 @@ export default function App() {
     }
     try {
       await signInWithEmailAndPassword(auth, loginEmail, loginPassword);
-      setShowLoginModal(false);
       setLoginEmail('');
       setLoginPassword('');
     } catch (error: any) {
@@ -103,9 +97,13 @@ export default function App() {
 
   // Listen to Auth State
   useEffect(() => {
-    if (!auth) return;
+    if (!auth) {
+      setIsAuthReady(true);
+      return;
+    }
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setIsAdmin(!!user);
+      setIsAuthenticated(!!user);
+      setIsAuthReady(true);
     });
     return () => unsubscribe();
   }, []);
@@ -141,6 +139,7 @@ export default function App() {
   useEffect(() => {
     const savedTheme = localStorage.getItem('dbstructure_theme');
     if (savedTheme) setTheme(savedTheme === 'dark');
+    if (!isAuthReady || !isAuthenticated) return;
 
     const loadData = async () => {
       let serverData = null;
@@ -227,10 +226,12 @@ export default function App() {
         if (unsub) unsub();
       });
     };
-  }, []);
+  }, [isAuthReady, isAuthenticated]);
 
   // Save changes to localStorage and Firebase (debounced)
   useEffect(() => {
+    if (!isAuthReady || !isAuthenticated) return;
+
     let timeoutId: NodeJS.Timeout;
     let isInitialLoad = true;
     
@@ -269,7 +270,7 @@ export default function App() {
       unsub();
       clearTimeout(timeoutId);
     };
-  }, []);
+  }, [isAuthReady, isAuthenticated]);
 
   const addNote = () => {
     if (!noteInput.trim()) return;
@@ -310,6 +311,70 @@ export default function App() {
   const deleteNote = (id: number) => {
     deleteNoteStore(id);
   };
+
+  if (!isAuthReady) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-[var(--bg)]">
+        <Loader2 className="animate-spin text-accent" size={48} />
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-[var(--bg)] px-4 relative">
+        <button
+          onClick={() => setTheme(!isDarkMode)}
+          className="absolute top-6 right-6 p-2.5 rounded-xl bg-[var(--bg-card)] border border-[var(--border)] text-[var(--text-muted)] hover:text-[var(--text)] hover:bg-[var(--bg-panel)] transition-all shadow-sm"
+          title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
+        >
+          {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
+        </button>
+        <motion.div
+          initial={{ scale: 0.95, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          className="bg-[var(--bg-card)] p-8 rounded-2xl shadow-2xl w-full max-w-sm border border-[var(--border)]"
+        >
+          <div className="flex flex-col items-center mb-8">
+            <div className="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center mb-4">
+              <Database className="text-accent" size={24} />
+            </div>
+            <h2 className="text-2xl font-bold text-[var(--text)]">dbstructure-pro</h2>
+            <p className="text-[var(--text-muted)] mt-2 text-sm text-center">Sign in to access the database schema</p>
+          </div>
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-[var(--text-muted)] mb-1">Email</label>
+              <input
+                type="email"
+                value={loginEmail}
+                onChange={(e) => setLoginEmail(e.target.value)}
+                className="w-full px-4 py-2.5 border border-[var(--border)] rounded-xl bg-[var(--bg-panel)] text-[var(--text)] focus:ring-2 focus:ring-accent outline-none transition-all"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-[var(--text-muted)] mb-1">Password</label>
+              <input
+                type="password"
+                value={loginPassword}
+                onChange={(e) => setLoginPassword(e.target.value)}
+                className="w-full px-4 py-2.5 border border-[var(--border)] rounded-xl bg-[var(--bg-panel)] text-[var(--text)] focus:ring-2 focus:ring-accent outline-none transition-all"
+                required
+              />
+            </div>
+            {loginError && <p className="text-red-500 text-sm text-center">{loginError}</p>}
+            <button
+              type="submit"
+              className="w-full py-2.5 bg-accent hover:bg-accent-hover text-accent-text rounded-xl font-medium transition-all active:scale-[0.98] mt-2"
+            >
+              Sign In
+            </button>
+          </form>
+        </motion.div>
+      </div>
+    );
+  }
 
   return (
     <div 
@@ -370,17 +435,12 @@ export default function App() {
                     Notizen
                   </h3>
                   <button
-                    onClick={handleAdminToggle}
-                    className={clsx(
-                      "p-1.5 rounded-md transition-all flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-wider",
-                      isAdmin 
-                        ? "bg-accent/10 text-accent hover:bg-accent/20" 
-                        : "bg-[var(--bg-card)] text-[var(--text-muted)] hover:text-[var(--text)] border border-[var(--border-muted)]"
-                    )}
-                    title={isAdmin ? "Admin-Modus beenden" : "Admin-Modus aktivieren"}
+                    onClick={handleSignOut}
+                    className="p-1.5 rounded-md transition-all flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-wider bg-[var(--bg-card)] text-[var(--text-muted)] hover:text-[var(--text)] border border-[var(--border-muted)]"
+                    title="Sign Out"
                   >
-                    {isAdmin ? <Unlock size={12} /> : <Lock size={12} />}
-                    {isAdmin && "Admin"}
+                    <Lock size={12} />
+                    Sign Out
                   </button>
                 </div>
                 <button 
@@ -449,16 +509,13 @@ export default function App() {
                       >
                         <div className="flex gap-3">
                           <button 
-                            onClick={() => isAdmin && toggleNote(note.id)}
-                            disabled={!isAdmin}
+                            onClick={() => toggleNote(note.id)}
                             className={clsx(
                               "mt-0.5 w-4 h-4 rounded-full border flex items-center justify-center transition-all shrink-0",
                               note.checked 
                                 ? "bg-[var(--text)] border-[var(--text)]" 
                                 : "border-[var(--text-muted)]",
-                              isAdmin 
-                                ? "hover:border-[var(--text)] cursor-pointer" 
-                                : "cursor-default opacity-60"
+                              "hover:border-[var(--text)] cursor-pointer"
                             )}
                           >
                             {note.checked && <Check size={10} className="text-[var(--bg)]" />}
@@ -476,14 +533,13 @@ export default function App() {
                                 {new Date(note.timestamp).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
                               </span>
                               
-                              {isAdmin && (
                                 <button 
                                   onClick={() => deleteNote(note.id)}
                                   className="p-1 rounded-md text-[var(--text-muted)] hover:text-red-500 hover:bg-red-500/10 opacity-0 group-hover:opacity-100 transition-all"
                                 >
                                   <Trash2 size={14} />
                                 </button>
-                              )}
+                              
                             </div>
                           </div>
                         </div>
@@ -496,61 +552,6 @@ export default function App() {
           )}
         </AnimatePresence>
       </main>
-
-      {/* Login Modal */}
-      <AnimatePresence>
-        {showLoginModal && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4"
-          >
-            <motion.div
-              initial={{ scale: 0.95, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.95, opacity: 0 }}
-              className="bg-[var(--bg)] p-6 rounded-xl shadow-2xl w-full max-w-sm border border-[var(--border)]"
-            >
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-xl font-semibold text-[var(--text)]">Admin Login</h2>
-                <button onClick={() => setShowLoginModal(false)} className="text-[var(--text-muted)] hover:text-[var(--text)] transition-colors">
-                  <X size={20} />
-                </button>
-              </div>
-              <form onSubmit={handleLogin} className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-[var(--text-muted)] mb-1">Email</label>
-                  <input
-                    type="email"
-                    value={loginEmail}
-                    onChange={(e) => setLoginEmail(e.target.value)}
-                    className="w-full px-3 py-2 border border-[var(--border)] rounded-lg bg-[var(--bg-secondary)] text-[var(--text)] focus:ring-2 focus:ring-indigo-500 outline-none"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-[var(--text-muted)] mb-1">Password</label>
-                  <input
-                    type="password"
-                    value={loginPassword}
-                    onChange={(e) => setLoginPassword(e.target.value)}
-                    className="w-full px-3 py-2 border border-[var(--border)] rounded-lg bg-[var(--bg-secondary)] text-[var(--text)] focus:ring-2 focus:ring-indigo-500 outline-none"
-                    required
-                  />
-                </div>
-                {loginError && <p className="text-red-500 text-sm">{loginError}</p>}
-                <button
-                  type="submit"
-                  className="w-full py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition-colors"
-                >
-                  Login
-                </button>
-              </form>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   );
 }
