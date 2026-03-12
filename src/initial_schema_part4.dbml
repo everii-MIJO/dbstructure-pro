@@ -603,3 +603,16 @@ Ref: in_rate.agency > in_tenant.id
 Ref: fi_budget.id > ze_kunde.kd_id
 Ref: fi_budget.id > ze_bereich.ber_id
 Ref: fi_budget.id > ze_job.job_id
+Ref: workflow_instance.workflow_id > workflow.id
+Ref: workflow_instance_stage.instance_id > workflow_instance.id
+Ref: workflow_instance_stage.stage_id > workflow_stage.id
+Ref: workflow_log.workflow_id > workflow.id
+Ref: workflow_log.stage_id > workflow_stage.id
+Ref: workflow_log.user > ze_mitarb.ma_id
+Ref: workflow_main_condition.workflow_id > workflow.id
+Ref: workflow_main_condition.condition_id > workflow_condition.id
+Ref: workflow_stage.workflow_id > workflow.id
+Ref: workflow_stage_action.stage_id > workflow_stage.id
+Ref: workflow_stage_action.action_id > workflow_action.id
+Ref: workflow_stage_condition.stage_id > workflow_stage.id
+Ref: workflow_stage_condition.condition_id > workflow_condition.id

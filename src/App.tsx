@@ -14,7 +14,8 @@ import {
   Plus,
   Maximize,
   Lock,
-  Unlock
+  Unlock,
+  KeyRound
 } from 'lucide-react';
 import { Node as RFNode, Edge, ReactFlowInstance } from '@xyflow/react';
 import { Schema, Note } from './types';
@@ -29,7 +30,7 @@ import schemaPart4 from './initial_schema_part4.dbml?raw';
 import { useStore } from './store/useStore';
 import { db, auth } from './lib/firebase';
 import { ref, onValue, set as firebaseSet, get } from 'firebase/database';
-import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth';
+import { signInWithEmailAndPassword, signOut, onAuthStateChanged, updatePassword } from 'firebase/auth';
 import emailjs from '@emailjs/browser';
 
 const processNodes = (nodes: any[]) => {
@@ -71,12 +72,58 @@ export default function App() {
   const [loginPassword, setLoginPassword] = useState('');
   const [loginError, setLoginError] = useState('');
 
+  const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [changePasswordError, setChangePasswordError] = useState('');
+  const [changePasswordSuccess, setChangePasswordSuccess] = useState('');
+
   const diagramRef = React.useRef<DiagramRef>(null);
   const searchRef = React.useRef<HTMLDivElement>(null);
   const workerRef = useRef<Worker | null>(null);
 
   const handleSignOut = () => {
     if (auth) signOut(auth);
+  };
+
+
+  const handleChangePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setChangePasswordError('');
+    setChangePasswordSuccess('');
+
+    if (newPassword !== confirmPassword) {
+      setChangePasswordError('Passwords do not match.');
+      return;
+    }
+
+    if (newPassword.length < 6) {
+      setChangePasswordError('Password should be at least 6 characters.');
+      return;
+    }
+
+    if (!auth?.currentUser) {
+      setChangePasswordError('You must be logged in to change your password.');
+      return;
+    }
+
+    try {
+      await updatePassword(auth.currentUser, newPassword);
+      setChangePasswordSuccess('Password updated successfully!');
+      setNewPassword('');
+      setConfirmPassword('');
+      setTimeout(() => {
+        setIsChangePasswordOpen(false);
+        setChangePasswordSuccess('');
+      }, 2000);
+    } catch (error: any) {
+      console.error("Change password error:", error);
+      if (error.code === 'auth/requires-recent-login') {
+        setChangePasswordError('For security reasons, please sign out and sign in again before changing your password.');
+      } else {
+        setChangePasswordError(error.message || 'Failed to update password.');
+      }
+    }
   };
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -437,6 +484,15 @@ export default function App() {
                     <StickyNote size={18} className="text-accent" />
                     Notizen
                   </h3>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => setIsChangePasswordOpen(true)}
+                      className="p-1.5 rounded-md transition-all flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-wider bg-[var(--bg-card)] text-[var(--text-muted)] hover:text-[var(--text)] border border-[var(--border-muted)]"
+                      title="Change Password"
+                    >
+                      <KeyRound size={12} />
+                      Password
+                    </button>
                   <button
                     onClick={handleSignOut}
                     className="p-1.5 rounded-md transition-all flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-wider bg-[var(--bg-card)] text-[var(--text-muted)] hover:text-[var(--text)] border border-[var(--border-muted)]"
@@ -445,6 +501,7 @@ export default function App() {
                     <Lock size={12} />
                     Sign Out
                   </button>
+                </div>  
                 </div>
                 <button 
                   onClick={() => toggleNotes(false)} 
@@ -552,6 +609,65 @@ export default function App() {
                 </AnimatePresence>
               </div>
             </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Change Password Modal */}
+        <AnimatePresence>
+          {isChangePasswordOpen && (
+            <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm px-4">
+              <motion.div
+                initial={{ scale: 0.95, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.95, opacity: 0 }}
+                className="bg-[var(--bg-card)] p-8 rounded-2xl shadow-2xl w-full max-w-sm border border-[var(--border)] relative"
+              >
+                <button
+                  onClick={() => setIsChangePasswordOpen(false)}
+                  className="absolute top-4 right-4 p-2 rounded-full hover:bg-[var(--bg-panel)] text-[var(--text-muted)] hover:text-[var(--text)] transition-all"
+                >
+                  <X size={18} />
+                </button>
+                <div className="flex flex-col items-center mb-6">
+                  <div className="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center mb-4">
+                    <KeyRound className="text-accent" size={24} />
+                  </div>
+                  <h2 className="text-xl font-bold text-[var(--text)]">Change Password</h2>
+                </div>
+                <form onSubmit={handleChangePassword} className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-[var(--text-muted)] mb-1">New Password</label>
+                    <input
+                      type="password"
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      className="w-full px-4 py-2.5 border border-[var(--border)] rounded-xl bg-[var(--bg-panel)] text-[var(--text)] focus:ring-2 focus:ring-accent outline-none transition-all"
+                      required
+                      minLength={6}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-[var(--text-muted)] mb-1">Confirm New Password</label>
+                    <input
+                      type="password"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      className="w-full px-4 py-2.5 border border-[var(--border)] rounded-xl bg-[var(--bg-panel)] text-[var(--text)] focus:ring-2 focus:ring-accent outline-none transition-all"
+                      required
+                      minLength={6}
+                    />
+                  </div>
+                  {changePasswordError && <p className="text-red-500 text-sm text-center">{changePasswordError}</p>}
+                  {changePasswordSuccess && <p className="text-green-500 text-sm text-center">{changePasswordSuccess}</p>}
+                  <button
+                    type="submit"
+                    className="w-full py-2.5 bg-accent hover:bg-accent-hover text-accent-text rounded-xl font-medium transition-all active:scale-[0.98] mt-2"
+                  >
+                    Update Password
+                  </button>
+                </form>
+              </motion.div>
+            </div>
           )}
         </AnimatePresence>
       </main>
