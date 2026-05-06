@@ -889,7 +889,7 @@ Table fi_invoice {
   job integer
   kunde integer
   bordereau integer
-  empfaenger text
+  empfaenger integer
   lieferant varchar
   lieferantid integer
   custom text
