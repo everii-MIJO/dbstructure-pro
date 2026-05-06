@@ -616,3 +616,4 @@ Ref: workflow_stage_action.stage_id > workflow_stage.id
 Ref: workflow_stage_action.action_id > workflow_action.id
 Ref: workflow_stage_condition.stage_id > workflow_stage.id
 Ref: workflow_stage_condition.condition_id > workflow_condition.id
+Ref: fi_invoice.empfaenger > da_receiver
